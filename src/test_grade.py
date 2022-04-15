@@ -2,13 +2,7 @@ import unittest
 import numpy as np
 import grade
 
-class TestRoundGrade(unittest.TestCase):
-
-    def setUp(self) -> None:
-        pass
-
-    def tearDown(self) -> None:
-        pass        
+class TestRoundGrade(unittest.TestCase):     
 
     def test_roundGrade_comma(self): 
         self.assertEqual(
@@ -37,10 +31,37 @@ class TestRoundGrade(unittest.TestCase):
                 np.array([12, -3]),
                 grade.roundGrade(np.array([100, -300]))
             ), True)
+    
+    def test_roundGrade_1LowVal(self):
+        self.assertEqual(
+            np.array_equal(
+                np.array([2]),
+                grade.roundGrade(np.array([3]))
+            ), True)
+
+    def test_roundGrade_1LMidVal(self):
+        self.assertEqual(
+            np.array_equal(
+                np.array([7]),
+                grade.roundGrade(np.array([8.5]))
+            ), True)
+
+    def test_roundGrade_1LargeValue(self):
+        self.assertEqual(
+            np.array_equal(
+                np.array([10]),
+                grade.roundGrade(np.array([11]))
+            ), True)
+
+    def test_roundGrade_hej(self):
+        self.assertEqual(
+            np.array_equal(
+                np.array([7, 7, 2]),
+                grade.roundGrade(np.array([8.5, 8, 3]))
+        ), True)
 
 
-class TestFinalGrade(unittest.TestCase):
-    pass
+
 
 if __name__ == '__main__':
     unittest.main()

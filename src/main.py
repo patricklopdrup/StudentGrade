@@ -2,4 +2,12 @@ import numpy as np
 import grade
 
 
-print(grade.roundGrade(np.array([100, -300])))
+grades = np.matrix([
+            [10, 7, 12],
+            [12, 4, 2],
+            [4, 2, 0],
+            [10, 7, -3],
+            [12, 10, 2]
+        ])
+
+grade.computeFinalGrades(grades)
