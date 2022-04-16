@@ -1,4 +1,5 @@
 import numpy as np
+from prettytable import from_csv
 
 ROW = 0
 COLUMN = 1
@@ -58,3 +59,10 @@ def __finalGradeForMultipleAssignmentsNoMinus3(grades: np.array) -> int:
     lowestGradeIndex = np.argmin(grades)
     highestGrades = np.delete(grades, lowestGradeIndex)
     return np.mean(highestGrades)
+
+
+def showGradeList(grades: np.array) -> None:
+    '''
+    Print the grades in a table.
+    '''
+    

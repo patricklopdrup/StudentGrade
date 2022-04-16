@@ -1,13 +1,17 @@
 import numpy as np
 import grade
+import dataHandling
+import mainHelper as helper
 
 
-grades = np.matrix([
-            [10, 7, 12],
-            [12, 4, 2],
-            [4, 2, 0],
-            [10, 7, -3],
-            [12, 10, 2]
-        ])
+while True:
+    helper.showInfoText()
+    _input = input('What to do: ')
 
-grade.computeFinalGrades(grades)
+    if helper.isExit(_input):
+        print('Bye!')
+        break
+
+    elif _input == '1':
+        data = helper.loadData()
+        print(data.header)
