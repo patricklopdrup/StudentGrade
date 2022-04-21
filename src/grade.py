@@ -65,4 +65,15 @@ def showGradeList(grades: np.array) -> None:
     '''
     Print the grades in a table.
     '''
-    
+    pass
+
+
+def getErrorsInData(grades: np.array) -> np.array:
+    '''
+    Return the errors in the data.
+    '''
+    errors = np.array([])
+    for grade in grades:
+        if grade not in gradeScale:
+            errors = np.append(errors, grade)
+    return errors

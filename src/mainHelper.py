@@ -1,5 +1,6 @@
 import dataHandling
 import os
+import numpy as np
 
 LEN_OF_BOX = 65
 
@@ -35,7 +36,7 @@ def isExit(input:str) -> bool:
     return input == 'exit' or input == '5'
 
 
-def loadData():
+def loadData() -> np.array:
     printHeaderLine("Load data from a CSV file")
     while True:
         fileName = input('Enter file name: ')
@@ -48,11 +49,7 @@ def loadData():
         return dataHandling.readDataFromCsvFile(fileName)
     
 
-def checkDataError():
+def checkDataError(data:np.array):
     printHeaderLine("Check data error")
-    while True:
-        data = loadData()
-        if data is None:
-            return
-        print(data.header)
-        print(data.grades)
+    errorLines = []
+    
