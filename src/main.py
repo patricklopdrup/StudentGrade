@@ -14,4 +14,9 @@ while True:
 
     elif _input == '1':
         data = helper.loadData()
+        if data is None:
+            continue
         print(data.header)
+
+    elif _input == '2':
+        pass
