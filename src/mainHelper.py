@@ -1,6 +1,7 @@
 import dataHandling
 import os
 import numpy as np
+import grade
 
 LEN_OF_BOX = 65
 
@@ -51,5 +52,6 @@ def loadData() -> np.array:
 
 def checkDataError(data:np.array):
     printHeaderLine("Check data error")
-    errorLines = []
+    errors = grade.getErrorsInData(data.grades)
+
     

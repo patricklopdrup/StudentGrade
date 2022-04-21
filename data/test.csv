@@ -1,5 +1,6 @@
 StudentID,Name,Assignment1,Assignment2,Assignment3,Assignment4
-s123456,Michael Andersen,7,7,4,10
+s123456,Michael Andersen,7,6,4,10
+s123579,Thomas Nielsen,10,12,12,0
 s123789,Bettina Petersen,12,10,10,4
 s123468,Thomas Nielsen,-3,7,2,2
 s123579,Marie Hansen,10,12,12,0

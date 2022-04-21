@@ -1,5 +1,5 @@
 import numpy as np
-from prettytable import from_csv
+import dataHandling
 
 ROW = 0
 COLUMN = 1
@@ -68,12 +68,35 @@ def showGradeList(grades: np.array) -> None:
     pass
 
 
-def getErrorsInData(grades: np.array) -> np.array:
+def printErrorsInData(grades: np.array) -> None:
     '''
-    Return the errors in the data.
+    Print errors in the data.
+    Color the errors in red.
     '''
-    errors = np.array([])
-    for grade in grades:
-        if grade not in gradeScale:
-            errors = np.append(errors, grade)
-    return errors
+    pass
+
+
+def __getIndicesForDublicatedStudyIds(data: np.array) -> np.array:
+    studyIds = dataHandling.getStudyIdsFromData(data)
+    dublicatedStudyIdsIndices = np.array([])
+    for i in range(len(studyIds)):
+        for j in range(len(studyIds)):
+            if i != j and studyIds[i] == studyIds[j]:
+                dublicatedStudyIdsIndices = np.append(dublicatedStudyIdsIndices, i)
+    print(dublicatedStudyIdsIndices)
+    return dublicatedStudyIdsIndices
+    
+
+def __getIndicesForNonPossibleGrades(data:np.array) -> np.array:
+    gradeMatrix = dataHandling.getGradeMatrixFromData(data)
+    nonPossibleGradesIndices = np.array([], dtype=np.int)
+    for i in range(gradeMatrix.shape[ROW]):
+        for j in range(gradeMatrix.shape[COLUMN]):
+            if int(gradeMatrix[i,j]) not in gradeScale:
+                nonPossibleGradesIndices = np.append(nonPossibleGradesIndices, (i,j))
+    return nonPossibleGradesIndices
+
+
+if __name__ == '__main__':
+    data = dataHandling.readDataFromCsvFile('data/test.csv')
+    __getIndicesForNonPossibleGrades(data)
