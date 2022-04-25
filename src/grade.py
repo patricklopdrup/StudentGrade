@@ -70,7 +70,6 @@ def getIndicesForErrorRows(data: np.array) -> None:
     rowsWithErrors = np.empty((0,2), dtype=np.int)
     rowsWithErrors = np.append(rowsWithErrors, __getDublicatedStudyIdsCoordinates(data), axis=0)
     rowsWithErrors = np.append(rowsWithErrors, __getNonPossibleGradesCoordinates(data), axis=0)
-    print(rowsWithErrors)
     return rowsWithErrors
 
 
@@ -80,7 +79,8 @@ def __getDublicatedStudyIdsCoordinates(data: np.array) -> np.array:
     for i in range(len(studyIds)):
         for j in range(len(studyIds)):
             if i != j and studyIds[i] == studyIds[j]:
-                dublicatedStudyIdsIndices = np.append(dublicatedStudyIdsIndices, np.array([[i,0]]), axis=0)
+                coordinate = dataHandling.mapStudyIdCoordinateBack(np.array([i,j]))
+                dublicatedStudyIdsIndices = np.append(dublicatedStudyIdsIndices, [coordinate], axis=0)
     return dublicatedStudyIdsIndices
     
 
@@ -88,11 +88,18 @@ def __getNonPossibleGradesCoordinates(data:np.array) -> np.array:
     gradeMatrix = dataHandling.getGradeMatrixFromData(data)
     nonPossibleGradesIndices = np.empty((0,2), dtype=np.int)
     for i in range(gradeMatrix.shape[ROW]):
-        for j in range(gradeMatrix.shape[COLUMN]):
-            if int(gradeMatrix[i,j]) not in gradeScale:
+        for j in range(gradeMatrix.shape[COLUMN]):            
+            if not __isPossibleGrade(gradeMatrix[i,j]):
                 coordinate = dataHandling.mapGradeCoordinateBack(np.array([i,j]))
                 nonPossibleGradesIndices = np.append(nonPossibleGradesIndices, [coordinate], axis=0)
     return nonPossibleGradesIndices
+
+def __isPossibleGrade(grade) -> bool:
+    try:
+        grade = int(grade)
+        return grade in gradeScale
+    except ValueError: # if grade is not an integer
+        return False
 
 
 if __name__ == '__main__':

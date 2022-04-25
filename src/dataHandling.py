@@ -56,6 +56,14 @@ def mapGradeCoordinateBack(gradeCoordinate:np.array) -> np.array:
     '''
     return np.array([gradeCoordinate[ROW] + 1, gradeCoordinate[COLUMN] + 2])
 
+def mapStudyIdCoordinateBack(studyIdCoordinate:np.array) -> np.array:
+    '''
+    Map a studyId coordinate back to the coordinate in the data.
+    StudyId is always the first column, therefore the index is 0.
+    '''
+    return np.array([studyIdCoordinate[ROW] + 1, 0])
+
+
 
 
 if __name__ == '__main__':

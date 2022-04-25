@@ -1,4 +1,3 @@
-from codecs import getdecoder
 from prettytable import PrettyTable
 from colorama import Fore, Style
 import numpy as np
@@ -43,40 +42,72 @@ def createTableRows(data:np.array, table:PrettyTable, rowsToColor = [], color = 
 
 def showErrorTable(data:np.array, errorCoordinates:np.array) -> None:
     table = getDefaultTable(data)
-    createErrorTableRows(data, table, errorCoordinates)
-    print(f"\nTabel med {errorCoordinates.shape[0]} fejl:")
+    __createErrorTableRows(data, table, errorCoordinates)
+    if errorCoordinates.shape[0] == 0:
+        print("\nIngen fejl i tabellen.")
+    else:
+        print(f"\nTabel med {errorCoordinates.shape[0]} fejl " + Fore.RED +  "(rød)" + Style.RESET_ALL + ":")
     print(table)
 
 
-def createErrorTableRows(data:np.array, table:PrettyTable, errorCoordinates = np.empty((0,2), dtype=np.int), color = Fore.RED) -> PrettyTable:
-    count = 0
+def __createErrorTableRows(data:np.array, table:PrettyTable, errorCoordinates = np.empty((0,2)), color = Fore.RED) -> PrettyTable:
+    count = 1 # header is row 0. So start at 1
+    error_count = 0
     for row in data[1:]:
         if count in errorCoordinates[:,ROW]:
-            table.add_row(__colorCellInRow(row, color, errorCoordinates[errorCoordinates[:,ROW] == count, COLUMN]))
+            errorsInRow = __getAllErrorForRow(count, errorCoordinates)
+            table.add_row(__colorCellInRow(row, color, errorsInRow))
+            error_count += 1
         else:
             table.add_row(row)
         count += 1
+    return table
+
+def __getAllErrorForRow(rowNumber: int, errorCoordinates: np.array) -> np.array:
+    return errorCoordinates[errorCoordinates[:,ROW] == rowNumber][:,COLUMN]
 
 
 def __colorRow(row: np.array, color: Fore) -> np.array:
     return np.array([color + str(cell) + Style.RESET_ALL for cell in row])
 
 
-def __colorCellInRow(row: np.array, color: Fore, index: int) -> np.array:
-    row = np.delete(row, index)
-    errorInRow = np.array([color + str(row[index]) + Style.RESET_ALL])
+def __colorCellInRow(row: np.array, color: Fore, cell_indices: np.array) -> np.array:
+    '''
+    Color a single cell in a row.
+    '''
     newRow = np.array([], dtype=np.str)
-    ### TODO: Fix this.
+    errorsInRow = __getErrorRowColored(row, color, cell_indices)
+    errorCount = 0
     for i, cell in np.ndenumerate(row):
-        if i[0] == index:
-            newRow = np.append(newRow, errorInRow)
+        if i[0] in cell_indices:
+            newRow = np.append(newRow, errorsInRow[errorCount])
+            errorCount += 1
         else:
             newRow = np.append(newRow, cell)
-    #row = np.insert(row, index, errorInRow)
-    print(newRow)
-    return row
+    return newRow
     
+def __getErrorRowColored(row: np.array, color: Fore, cell_indices: np.array) -> np.array:
+    errorsInRow = np.array([])
+    for index in cell_indices:
+        errorsInRow = np.append(errorsInRow, color + str(row[index]) + Style.RESET_ALL)
+    return errorsInRow
 
 if __name__ == '__main__':
     data = dataHandling.readDataFromCsvFile('data/test.csv')
-    __colorCellInRow(data[1], Fore.RED, 1)
+    errors = np.array([
+        [1,0],
+        [4,0],
+        [1,3],
+        [2,5]
+        ])
+    np.reshape(errors, (4, 2))
+    print(errors)
+    print()
+    table = getDefaultTable(data)
+    table = __createErrorTableRows(data, table, errors)
+    print(table)
+
+    # table = getDefaultTable(data)
+    # table.add_row(__colorCellInRow(data[1], Fore.RED, [0,3]))
+    # table.add_row(data[2])
+    # print(table)
