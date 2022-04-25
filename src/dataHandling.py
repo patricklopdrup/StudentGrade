@@ -1,6 +1,9 @@
 import numpy as np
 
 
+ROW = 0
+COLUMN = 1
+
 
 def readDataFromCsvFile(fileName: str) -> np.array:
     arr = np.genfromtxt(fileName, delimiter=',', dtype=str)
@@ -25,9 +28,14 @@ def getNamesFromData(data:np.array):
     return body[:,1]
 
 
+def getStudentCount(data: np.array) -> int:
+    headerRowCount = 1
+    return data.shape[ROW] - headerRowCount
+
+
 def getGradesFromData(data:np.array, assignmentIndex:int):
     '''
-    Get the grades for a specific assignment. 0th index.
+    0th index.
     getGradesFromData(data, 0) will give the grades for the first assignment.
     '''
     body = getBodyValuesFromData(data)
@@ -40,3 +48,16 @@ def getGradeMatrixFromData(data:np.array):
     '''
     body = getBodyValuesFromData(data)
     return body[:,2:]
+
+
+def mapGradeCoordinateBack(gradeCoordinate:np.array) -> np.array:
+    '''
+    Map a grade coordinate back to the coordinate in the data.
+    '''
+    return np.array([gradeCoordinate[ROW] + 1, gradeCoordinate[COLUMN] + 2])
+
+
+
+if __name__ == '__main__':
+    data = readDataFromCsvFile('data/test.csv')
+    print(mapGradeCoordinateBack(np.array([0,0])))

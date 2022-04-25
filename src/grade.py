@@ -1,6 +1,7 @@
 import numpy as np
 import dataHandling
 
+
 ROW = 0
 COLUMN = 1
 gradeScale = np.array([-3, 0, 2, 4, 7, 10, 12])
@@ -61,42 +62,41 @@ def __finalGradeForMultipleAssignmentsNoMinus3(grades: np.array) -> int:
     return np.mean(highestGrades)
 
 
-def showGradeList(grades: np.array) -> None:
-    '''
-    Print the grades in a table.
-    '''
-    pass
-
-
-def printErrorsInData(grades: np.array) -> None:
+def getIndicesForErrorRows(data: np.array) -> None:
     '''
     Print errors in the data.
     Color the errors in red.
     '''
-    pass
+    rowsWithErrors = np.empty((0,2), dtype=np.int)
+    rowsWithErrors = np.append(rowsWithErrors, __getDublicatedStudyIdsCoordinates(data), axis=0)
+    rowsWithErrors = np.append(rowsWithErrors, __getNonPossibleGradesCoordinates(data), axis=0)
+    print(rowsWithErrors)
+    return rowsWithErrors
 
 
-def __getIndicesForDublicatedStudyIds(data: np.array) -> np.array:
+def __getDublicatedStudyIdsCoordinates(data: np.array) -> np.array:
     studyIds = dataHandling.getStudyIdsFromData(data)
-    dublicatedStudyIdsIndices = np.array([])
+    dublicatedStudyIdsIndices = np.empty((0,2), dtype=np.int)
     for i in range(len(studyIds)):
         for j in range(len(studyIds)):
             if i != j and studyIds[i] == studyIds[j]:
-                dublicatedStudyIdsIndices = np.append(dublicatedStudyIdsIndices, i)
-    print(dublicatedStudyIdsIndices)
+                dublicatedStudyIdsIndices = np.append(dublicatedStudyIdsIndices, np.array([[i,0]]), axis=0)
     return dublicatedStudyIdsIndices
     
 
-def __getIndicesForNonPossibleGrades(data:np.array) -> np.array:
+def __getNonPossibleGradesCoordinates(data:np.array) -> np.array:
     gradeMatrix = dataHandling.getGradeMatrixFromData(data)
-    nonPossibleGradesIndices = np.array([], dtype=np.int)
+    nonPossibleGradesIndices = np.empty((0,2), dtype=np.int)
     for i in range(gradeMatrix.shape[ROW]):
         for j in range(gradeMatrix.shape[COLUMN]):
             if int(gradeMatrix[i,j]) not in gradeScale:
-                nonPossibleGradesIndices = np.append(nonPossibleGradesIndices, (i,j))
+                coordinate = dataHandling.mapGradeCoordinateBack(np.array([i,j]))
+                nonPossibleGradesIndices = np.append(nonPossibleGradesIndices, [coordinate], axis=0)
     return nonPossibleGradesIndices
 
 
 if __name__ == '__main__':
     data = dataHandling.readDataFromCsvFile('data/test.csv')
-    __getIndicesForNonPossibleGrades(data)
+    #print(__getDublicatedStudyIdsCoordinates(data))
+
+    getIndicesForErrorRows(data)

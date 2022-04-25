@@ -2,6 +2,8 @@ import dataHandling
 import os
 import numpy as np
 import grade
+import customOutput as customOut
+from colorama import Fore, Style
 
 LEN_OF_BOX = 65
 
@@ -16,9 +18,10 @@ def printInBox(text:str) -> str:
     print(box)
 
 
-def printHeaderLine(text:str) -> str:
+def printHeaderLine(text:str, canGoBack = True) -> str:
     textLines = text.split('\n')
-    textLines.append('Press \'q\' to go back')
+    if canGoBack:
+        textLines.append('Press \'q\' to go back')
     box = ''.join(['+'] + ['-'] * LEN_OF_BOX + ['+'])
     print('\n' + box)
     for line in textLines:
@@ -51,7 +54,8 @@ def loadData() -> np.array:
     
 
 def checkDataError(data:np.array):
-    printHeaderLine("Check data error")
-    errors = grade.getErrorsInData(data.grades)
+    printHeaderLine("Check data error", False)
+    errorRows = grade.getIndicesForErrorRows(data)
+    customOut.showErrorTable(data, errorRows)
 
     
