@@ -92,6 +92,21 @@ def __getErrorRowColored(row: np.array, color: Fore, cell_indices: np.array) -> 
         errorsInRow = np.append(errorsInRow, color + str(row[index]) + Style.RESET_ALL)
     return errorsInRow
 
+
+def showGradeListTable(data: np.array) -> None:
+    rowsToColor = __getIndicesForEvenRows(data)
+    dataSorted = __sortDataByName(data)
+    table = getDefaultTable(dataSorted)
+    table = createTableRows(dataSorted, table, rowsToColor)
+    print(table)
+
+def __sortDataByName(data: np.array) -> np.array:
+    columnIndexOfNames = 1
+    dataWithOutHeader = data[1:]
+    sortedByName = dataWithOutHeader[dataWithOutHeader[:,columnIndexOfNames].argsort()]
+    return np.insert(sortedByName, 0, data[0], axis=0)
+
+
 if __name__ == '__main__':
     data = dataHandling.readDataFromCsvFile('data/test.csv')
     errors = np.array([

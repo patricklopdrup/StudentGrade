@@ -2,7 +2,7 @@ import dataHandling
 import os
 import numpy as np
 import grade
-import customOutput as customOut
+import customTables as table
 from colorama import Fore, Style
 
 LEN_OF_BOX = 65
@@ -56,6 +56,20 @@ def loadData() -> np.array:
 def checkDataError(data:np.array):
     printHeaderLine("Check data error", False)
     errorRows = grade.getIndicesForErrorRows(data)
-    customOut.showErrorTable(data, errorRows)
+    table.showErrorTable(data, errorRows)
 
     
+def showGradeListTable(data:np.array):
+    while True:
+        orderedBy = "name"
+        printHeaderLine(f"Grade list ordered by {orderedBy}")
+        table.showGradeListTable(data)
+        __orderByHelp()
+        orderBy = input('Order by: ')
+        if orderBy == 'q':
+            return None
+        
+
+def __orderByHelp() -> None:
+    printHeaderLine("Order by:\n[1] StudentId  [2] Name  [3] Final grade")
+

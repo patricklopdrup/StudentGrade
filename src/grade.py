@@ -62,7 +62,7 @@ def __finalGradeForMultipleAssignmentsNoMinus3(grades: np.array) -> int:
     return np.mean(highestGrades)
 
 
-def getIndicesForErrorRows(data: np.array) -> None:
+def getIndicesForErrorRows(data: np.array) -> np.array:
     '''
     Print errors in the data.
     Color the errors in red.

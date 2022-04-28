@@ -2,7 +2,7 @@ import numpy as np
 import grade
 import dataHandling
 import mainHelper as helper
-import customOutput as customOut
+import customTables as table
 import debug
 
 
@@ -22,7 +22,13 @@ while True:
         data = helper.loadData()
         if data is None:
             continue
-        customOut.showCsvData(data)
+        table.showCsvData(data)
 
     elif _input == '2':
         helper.checkDataError(data)
+    
+    elif _input == '3':
+        pass
+
+    elif _input == '4':
+        helper.showGradeListTable(data)

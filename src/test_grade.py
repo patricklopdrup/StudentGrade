@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import grade
 
-class TestRoundGrade(unittest.TestCase):     
+class TestRoundGrade(unittest.TestCase):
 
     def test_roundGrade_comma(self): 
         self.assertEqual(
