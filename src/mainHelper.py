@@ -23,7 +23,7 @@ def printInBox(text:str) -> None:
     print(box)
 
 
-def printHeaderLine(text:str, canGoBack = True) -> None:
+def printHeaderLine(text:str, canGoBack = True, color = Fore.WHITE) -> None:
     textLines = text.split('\n')
     if canGoBack:
         textLines.append('Press \'q\' to go back')
@@ -31,25 +31,31 @@ def printHeaderLine(text:str, canGoBack = True) -> None:
     print('\n' + box)
     for line in textLines:
         padding = int((LEN_OF_BOX - len(line)) / 2)
-        print(' ' * padding + line)
+        print(' ' * padding + f'{color}{line}{Style.RESET_ALL}')
     print(box)
 
 
 def printErrorLine(text:str = '') -> None:
     if text == '':
         text = 'Error in data.\nPress \'2\' to check errors.'
-    errorText = f"{Fore.RED}{text}{Style.RESET_ALL}"
-    printHeaderLine(errorText, False)
+    printHeaderLine(text, False, Fore.RED)
 
 
 def showInfoText():
     printInBox("[1] Load Data\t[3] Generate Plots\t[5] Exit\n"
-             + "[2] Check Error\t[4] Show Grade List\t[6] Show Help")
+             + "[2] Check Error\t[4] Show Grade List")
 
 
 def isExit(input:str) -> bool:
     input = input.lower()
     return input == 'exit' or input == '5'
+
+
+def isValidInput(input:str, isDataLoaded:bool) -> bool:
+    if isDataLoaded:
+        return True
+    else:
+        return isExit(input) or input == '1'
 
 
 def loadData() -> np.array:
@@ -61,8 +67,12 @@ def loadData() -> np.array:
         elif not os.path.isfile(fileName):
             print('File not found! Try again.')
             continue
-
-        return dataHandling.readDataFromCsvFile(fileName)
+        
+        try:
+            return dataHandling.readDataFromCsvFile(fileName)
+        except Exception as e:
+            printErrorLine(f"Could not load the .csv file.\n{e}")
+            return None
     
 
 def checkDataError(data:np.array):
@@ -75,9 +85,6 @@ def showGradeListTable(data:np.array):
     orderedBy = "name"
     printHeaderLine(f"Grade list ordered by {orderedBy}")
     table.showGradeListTable(data)
-        
-def __orderByHelp() -> None:
-    printHeaderLine("Order by:\n[1] StudentId  [2] Name  [3] Final grade")
 
 
 def generatePlots(data):

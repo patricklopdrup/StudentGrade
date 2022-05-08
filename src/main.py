@@ -5,12 +5,14 @@ import mainHelper as helper
 import customTables as table
 import debug
 
+isDataLoaded = False
 
 while True:
     helper.showInfoText()
 
     if debug.isDebug:
         data = dataHandling.readDataFromCsvFile('data/test.csv')
+        isDataLoaded = True
 
     _input = input('What to do: ')
 
@@ -18,10 +20,16 @@ while True:
         print('Bye!')
         break
 
+    elif not helper.isValidInput(_input, isDataLoaded):
+        helper.printErrorLine('Load data before working with it.')
+        continue
+
     elif _input == '1':
         data = helper.loadData()
         if data is None:
+            isDataLoaded = False
             continue
+        isDataLoaded = True
         table.showCsvData(data)
 
     elif _input == '2':
