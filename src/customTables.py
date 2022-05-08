@@ -13,7 +13,7 @@ def showCsvData(data: np.array) -> None:
     rowsToColor = __getIndicesForEvenRows(data)
     table = getDefaultTable(data)
     table = createTableRows(data, table, rowsToColor, Fore.CYAN)
-    print(f"\nTabel med {dataHandling.getStudentCount(data)} studerende:")
+    print(f"\nTable with {dataHandling.getStudentCount(data)} students:")
     print(table)
 
 
@@ -44,9 +44,9 @@ def showErrorTable(data:np.array, errorCoordinates:np.array) -> None:
     table = getDefaultTable(data)
     __createErrorTableRows(data, table, errorCoordinates)
     if errorCoordinates.shape[0] == 0:
-        print("\nIngen fejl i tabellen.")
+        print("\nNo errors in table.")
     else:
-        print(f"\nTabel med {errorCoordinates.shape[0]} fejl " + Fore.RED +  "(rød)" + Style.RESET_ALL + ":")
+        print(f"\nTable with {errorCoordinates.shape[0]} error(s) " + Fore.RED +  "(red)" + Style.RESET_ALL + ":")
     print(table)
 
 
