@@ -1,13 +1,18 @@
+from cProfile import label
 import dataHandling
 import os
 import numpy as np
 import grade
 import customTables as table
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import customPlots as plots
 from colorama import Fore, Style
 
 LEN_OF_BOX = 65
 
-def printInBox(text:str) -> str:
+def printInBox(text:str) -> None:
     textLines = text.split('\n')
     maxLen = max([len(line) for line in textLines])
     box = ''.join(['+'] + ['-'] * LEN_OF_BOX + ['+'])
@@ -18,7 +23,7 @@ def printInBox(text:str) -> str:
     print(box)
 
 
-def printHeaderLine(text:str, canGoBack = True) -> str:
+def printHeaderLine(text:str, canGoBack = True) -> None:
     textLines = text.split('\n')
     if canGoBack:
         textLines.append('Press \'q\' to go back')
@@ -30,8 +35,15 @@ def printHeaderLine(text:str, canGoBack = True) -> str:
     print(box)
 
 
+def printErrorLine(text:str = '') -> None:
+    if text == '':
+        text = 'Error in data.\nPress \'2\' to check errors.'
+    errorText = f"{Fore.RED}{text}{Style.RESET_ALL}"
+    printHeaderLine(errorText, False)
+
+
 def showInfoText():
-    printInBox("[1] Load Data\t[3] Generate Diagrams\t[5] Exit\n"
+    printInBox("[1] Load Data\t[3] Generate Plots\t[5] Exit\n"
              + "[2] Check Error\t[4] Show Grade List\t[6] Show Help")
 
 
@@ -60,16 +72,14 @@ def checkDataError(data:np.array):
 
     
 def showGradeListTable(data:np.array):
-    while True:
-        orderedBy = "name"
-        printHeaderLine(f"Grade list ordered by {orderedBy}")
-        table.showGradeListTable(data)
-        __orderByHelp()
-        orderBy = input('Order by: ')
-        if orderBy == 'q':
-            return None
+    orderedBy = "name"
+    printHeaderLine(f"Grade list ordered by {orderedBy}")
+    table.showGradeListTable(data)
         
-
 def __orderByHelp() -> None:
     printHeaderLine("Order by:\n[1] StudentId  [2] Name  [3] Final grade")
+
+
+def generatePlots(data):
+    plots.generateFinalGradePlot(data)
 

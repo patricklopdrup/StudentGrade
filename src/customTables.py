@@ -45,10 +45,10 @@ def createTableRows(data:np.array, table:PrettyTable, rowsToColor = [], color = 
 def showErrorTable(data:np.array, errorCoordinates:np.array) -> None:
     table = getDefaultTable(data)
     __createErrorTableRows(data, table, errorCoordinates)
-    if errorCoordinates.shape[0] == 0:
+    if not grade.hasAnyError(data):
         print("\nNo errors in table.")
     else:
-        print(f"\nTable with {errorCoordinates.shape[0]} error(s) " + Fore.RED +  "(red)" + Style.RESET_ALL + ":")
+        print(f"\nTable with {grade.getAmountOfErrors(data)} error(s) " + Fore.RED +  "(red)" + Style.RESET_ALL + ":")
     print(table)
 
 
@@ -97,18 +97,11 @@ def __getErrorRowColored(row: np.array, color: Fore, cell_indices: np.array) -> 
 
 def showGradeListTable(data: np.array) -> None:
     dataSorted = __sortDataByName(data)
-    dataSorted = __addFinalGradesToData(dataSorted)
+    dataSorted = grade.addFinalGradesToData(dataSorted)
     rowsToColor = __getIndicesForEvenRows(dataSorted)
     table = getDefaultTable(dataSorted)
     table = createTableRows(dataSorted, table, rowsToColor)
     print(table)
-
-
-def __addFinalGradesToData(data: np.array) -> np.array:
-    grades = dataHandling.getGradeMatrixFromData(data, asInt=True)
-    finalGrades = grade.computeFinalGrades(grades)
-    finalGrades = np.concatenate((['Final Grade'], finalGrades), axis=0)
-    return np.c_[data, finalGrades]
 
 
 def __sortDataByName(data: np.array) -> np.array:

@@ -65,8 +65,6 @@ def mapStudyIdCoordinateBack(studyIdCoordinate:np.array) -> np.array:
     return np.array([studyIdCoordinate[ROW] + 1, 0])
 
 
-
-
 if __name__ == '__main__':
     data = readDataFromCsvFile('data/test.csv')
     print(mapGradeCoordinateBack(np.array([0,0])))

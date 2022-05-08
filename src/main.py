@@ -10,7 +10,7 @@ while True:
     helper.showInfoText()
 
     if debug.isDebug:
-        data = dataHandling.readDataFromCsvFile('data/test.csv')
+        data = dataHandling.readDataFromCsvFile('data/longtest.csv')
 
     _input = input('What to do: ')
 
@@ -28,7 +28,13 @@ while True:
         helper.checkDataError(data)
     
     elif _input == '3':
-        pass
+        if grade.hasAnyError(data):
+            helper.printErrorLine()
+        else:
+            pass
 
     elif _input == '4':
-        helper.showGradeListTable(data)
+        if grade.hasAnyError(data):
+            helper.printErrorLine()
+        else:
+            helper.showGradeListTable(data)

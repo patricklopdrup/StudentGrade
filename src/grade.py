@@ -5,6 +5,15 @@ import dataHandling
 ROW = 0
 COLUMN = 1
 gradeScale = np.array([-3, 0, 2, 4, 7, 10, 12])
+gradeIndex = {
+    -3: 0,
+    0: 1,
+    2: 2,
+    4: 3,
+    7: 4,
+    10: 5,
+    12: 6
+}
 
 def roundGrade(grades: np.array) -> np.array:
     '''
@@ -61,6 +70,12 @@ def __finalGradeForMultipleAssignmentsNoMinus3(grades: np.array) -> int:
     highestGrades = np.delete(grades, lowestGradeIndex)
     return np.mean(highestGrades)
 
+def getAmountOfErrors(data: np.array) -> int:
+    errorCoordinates = getIndicesForErrorRows(data)
+    return errorCoordinates.shape[0]
+
+def hasAnyError(data: np.array) -> bool:
+    return getAmountOfErrors(data) > 0
 
 def getIndicesForErrorRows(data: np.array) -> np.array:
     '''
@@ -100,6 +115,22 @@ def __isPossibleGrade(grade) -> bool:
         return grade in gradeScale
     except ValueError: # if grade is not an integer
         return False
+
+
+def addFinalGradesToData(data: np.array) -> np.array:
+    grades = dataHandling.getGradeMatrixFromData(data, asInt=True)
+    finalGrades = computeFinalGrades(grades)
+    finalGrades = np.concatenate((['Final Grade'], finalGrades), axis=0)
+    return np.c_[data, finalGrades]
+
+
+def getFinalGradeDestribution(data: np.array) -> np.array:
+    grades = dataHandling.getGradeMatrixFromData(data, asInt=True)
+    finalGrades = computeFinalGrades(grades)
+    finalGradesDistribution = np.zeros(len(gradeScale), dtype=np.int)
+    for grade in finalGrades:
+        finalGradesDistribution[gradeIndex[grade]] += 1
+    return finalGradesDistribution
 
 
 if __name__ == '__main__':
