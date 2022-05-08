@@ -71,7 +71,7 @@ def loadData() -> np.array:
         try:
             return dataHandling.readDataFromCsvFile(fileName)
         except Exception as e:
-            printErrorLine(f"Could not load the .csv file.\n{e}")
+            printErrorLine(f"Could not load the CSV file.\n{e}")
             return None
     
 
