@@ -1,5 +1,6 @@
 # My ignores
 Projects-Dansk-Python.pdf
+tempCodeRunner*.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,6 +1,7 @@
 from hashlib import new
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 import pandas as pd
 import grade
 import dataHandling
@@ -24,27 +25,58 @@ def generateFinalGradePlot(data):
 
 
 def generateGradesPerAssignmentPlot(data: np.array):
-    data = dataHandling.getGradeMatrixFromData(data, asInt=True)
-    hej = dataHandling.getGradesForAssignment(data, 0)
-    newGrades = getGradesForPlot(hej)
-    print(newGrades)
+    grades = dataHandling.getGradesForAssignment(data, 0)
     fig, ax = plt.subplots()
-    x = []
-    y = []
+    # Data to use
+    x = getXValuesForPlot(data)
+    y = getYValuesForPlot(data)
+    # Create a scatter plot
+    plt.scatter(x, y, color='b', s=10)
+    ax.set_title('Grades per assignment')
+    ax.set_ylabel('Grades')
+    ax.set_xlabel('Assignments')
+    plt.xticks(np.arange(1, dataHandling.getAssignmentCount(data) + 1))
+    plt.yticks(grade.gradeScale)
+    plt.show()
 
 
-def getGradesForPlot(grades: np.array) -> np.array:
+def getXValuesForPlot(data: np.array) -> np.array:
+    xValues = np.array([], dtype=np.float)
+    assignmentCount = dataHandling.getAssignmentCount(data)
+    for i in range(assignmentCount):
+        grades = dataHandling.getGradesForAssignment(data, i)
+        xValues = np.append(xValues, getXIndices(grades, i))
+    return xValues
+
+def getXIndices(grades: np.array, assignmentIndex: int) -> np.array:
+    assignmentIndex += 1
+    xIndices = np.array([], dtype=np.int)
+    for _ in range(grades.size):
+        xIndices = np.append(xIndices, assignmentIndex + getRandomOffset(0.1))
+    print(xIndices)
+    return xIndices
+
+
+def getYValuesForPlot(data: np.array) -> np.array:
+    yValues = np.array([], dtype=np.float)
+    assignmentCount = dataHandling.getAssignmentCount(data)
+    for i in range(assignmentCount):
+        grades = dataHandling.getGradesForAssignment(data, i)
+        yValues = np.append(yValues, getYIndices(grades))
+    return yValues
+
+def getYIndices(grades: np.array) -> np.array:
     newGrades = np.array([], dtype=np.float)
-    for grade in np.nditer(grades):
-        newGrades = np.append(newGrades, grade + getRandomOffSet())
+    for g in np.nditer(grades):
+        newGrades = np.append(newGrades, g + getRandomOffset(0.3))
     return newGrades
 
 
-def getRandomOffSet() -> float:
-    return random.uniform(-0.1, 0.1)
+def getRandomOffset(offset:float) -> float:
+    return random.uniform(-offset, offset)
 
 
 if __name__ == '__main__':
-    data = dataHandling.readDataFromCsvFile('data/longtest.csv')
+    data = dataHandling.readDataFromCsvFile('data/test.csv')
     #generateFinalGradePlot(data)
     generateGradesPerAssignmentPlot(data)

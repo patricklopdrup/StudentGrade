@@ -39,7 +39,15 @@ def getGradesForAssignment(data:np.array, assignmentIndex:int):
     getGradesFromData(data, 0) will give the grades for the first assignment.
     '''
     body = getBodyValuesFromData(data)
-    return body[:,assignmentIndex + 2]
+    grades = body[:,assignmentIndex + 2]
+    return grades.astype(int)
+
+
+def getAssignmentCount(data:np.array) -> int:
+    '''
+    Get the number of assignments.
+    '''
+    return data.shape[COLUMN] - 2   
 
 
 def getGradeMatrixFromData(data:np.array, asInt:bool = False) -> np.array:
