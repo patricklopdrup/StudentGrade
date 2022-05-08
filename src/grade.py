@@ -18,14 +18,14 @@ def roundGrade(grades: np.array) -> np.array:
     return gradesRounded
 
 
-def computeFinalGrades(grades: np.matrix) -> np.array:
+def computeFinalGrades(grades: np.array) -> np.array:
     '''
     Calculate the final grades for all students.
     If a student has a grade of -3, then their final grade is -3.
     If only one assignment is present, then the final grade is the grade of that assignment.
     If multiple assignments are present, then the final grade is the mean of the highest M-1 grades.
 
-    @param grades: A matrix of grades for multiple students.
+    @param grades: A matrix of int grades for multiple students.
     @return: An array of final grades for each student.
     The array is rounded to the nearest grade in the grade scale.
     '''

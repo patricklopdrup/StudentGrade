@@ -1,8 +1,10 @@
+from cmath import asin
 from prettytable import PrettyTable
 from colorama import Fore, Style
 import numpy as np
 import dataHandling
 import sys
+import grade
 np.set_printoptions(threshold=sys.maxsize)
 
 ROW = 0
@@ -94,11 +96,20 @@ def __getErrorRowColored(row: np.array, color: Fore, cell_indices: np.array) -> 
 
 
 def showGradeListTable(data: np.array) -> None:
-    rowsToColor = __getIndicesForEvenRows(data)
     dataSorted = __sortDataByName(data)
+    dataSorted = __addFinalGradesToData(dataSorted)
+    rowsToColor = __getIndicesForEvenRows(dataSorted)
     table = getDefaultTable(dataSorted)
     table = createTableRows(dataSorted, table, rowsToColor)
     print(table)
+
+
+def __addFinalGradesToData(data: np.array) -> np.array:
+    grades = dataHandling.getGradeMatrixFromData(data, asInt=True)
+    finalGrades = grade.computeFinalGrades(grades)
+    finalGrades = np.concatenate((['Final Grade'], finalGrades), axis=0)
+    return np.c_[data, finalGrades]
+
 
 def __sortDataByName(data: np.array) -> np.array:
     columnIndexOfNames = 1
@@ -109,20 +120,17 @@ def __sortDataByName(data: np.array) -> np.array:
 
 if __name__ == '__main__':
     data = dataHandling.readDataFromCsvFile('data/test.csv')
-    errors = np.array([
-        [1,0],
-        [4,0],
-        [1,3],
-        [2,5]
-        ])
-    np.reshape(errors, (4, 2))
-    print(errors)
-    print()
-    table = getDefaultTable(data)
-    table = __createErrorTableRows(data, table, errors)
-    print(table)
-
+    # errors = np.array([
+    #     [1,0],
+    #     [4,0],
+    #     [1,3],
+    #     [2,5]
+    #     ])
+    # np.reshape(errors, (4, 2))
+    # print(errors)
+    # print()
     # table = getDefaultTable(data)
-    # table.add_row(__colorCellInRow(data[1], Fore.RED, [0,3]))
-    # table.add_row(data[2])
+    # table = __createErrorTableRows(data, table, errors)
     # print(table)
+
+    showGradeListTable(data)

@@ -33,7 +33,7 @@ def getStudentCount(data: np.array) -> int:
     return data.shape[ROW] - headerRowCount
 
 
-def getGradesFromData(data:np.array, assignmentIndex:int):
+def getGradesForAssignment(data:np.array, assignmentIndex:int):
     '''
     0th index.
     getGradesFromData(data, 0) will give the grades for the first assignment.
@@ -42,12 +42,13 @@ def getGradesFromData(data:np.array, assignmentIndex:int):
     return body[:,assignmentIndex + 2]
 
 
-def getGradeMatrixFromData(data:np.array):
+def getGradeMatrixFromData(data:np.array, asInt:bool = False) -> np.array:
     '''
     Get the grades for all assignments.
     '''
     body = getBodyValuesFromData(data)
-    return body[:,2:]
+    grades = body[:,2:]
+    return grades.astype(int) if asInt else grades
 
 
 def mapGradeCoordinateBack(gradeCoordinate:np.array) -> np.array:

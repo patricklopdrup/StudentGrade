@@ -6,6 +6,7 @@ import grade
 class TestComputeFinalGrade(unittest.TestCase):
     
     def test_computeFinalGrade_1Value(self):
+        
         grades = np.array([[10],
                             [12],
                             [-3]])
