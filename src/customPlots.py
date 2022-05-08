@@ -1,7 +1,6 @@
 from hashlib import new
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
 import pandas as pd
 import grade
 import dataHandling
@@ -26,16 +25,22 @@ def generateFinalGradePlot(data):
 
 def generateGradesPerAssignmentPlot(data: np.array):
     grades = dataHandling.getGradesForAssignment(data, 0)
+    assignmentCount = dataHandling.getAssignmentCount(data)
     fig, ax = plt.subplots()
-    # Data to use
+    # Scatter plot for grades per assignment
     x = getXValuesForPlot(data)
     y = getYValuesForPlot(data)
-    # Create a scatter plot
     plt.scatter(x, y, color='b', s=10)
+    # Scatter plot for mean values
+    xMean = range(1, assignmentCount+1)
+    yMean = getMeanValuesForPlot(data)
+    plt.plot(xMean, yMean, '--', color='r')
+    # Set title and labels
     ax.set_title('Grades per assignment')
     ax.set_ylabel('Grades')
     ax.set_xlabel('Assignments')
-    plt.xticks(np.arange(1, dataHandling.getAssignmentCount(data) + 1))
+    plt.legend(['Grades', 'Mean'])
+    plt.xticks(np.arange(1, assignmentCount + 1))
     plt.yticks(grade.gradeScale)
     plt.show()
 
@@ -53,7 +58,6 @@ def getXIndices(grades: np.array, assignmentIndex: int) -> np.array:
     xIndices = np.array([], dtype=np.int)
     for _ in range(grades.size):
         xIndices = np.append(xIndices, assignmentIndex + getRandomOffset(0.1))
-    print(xIndices)
     return xIndices
 
 
@@ -70,6 +74,14 @@ def getYIndices(grades: np.array) -> np.array:
     for g in np.nditer(grades):
         newGrades = np.append(newGrades, g + getRandomOffset(0.3))
     return newGrades
+
+
+def getMeanValuesForPlot(data: np.array) -> np.array:
+    meanValues = np.array([], dtype=np.float)
+    assignmentCount = dataHandling.getAssignmentCount(data)
+    for i in range(assignmentCount):
+        meanValues = np.append(meanValues, grade.getMeanValueForAssignment(data, i))
+    return meanValues
 
 
 def getRandomOffset(offset:float) -> float:

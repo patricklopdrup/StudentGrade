@@ -133,6 +133,11 @@ def getFinalGradeDestribution(data: np.array) -> np.array:
     return finalGradesDistribution
 
 
+def getMeanValueForAssignment(data: np.array, assignment: int) -> float:
+    grades = dataHandling.getGradeMatrixFromData(data, asInt=True)
+    return np.mean(grades[:,assignment])
+
+
 if __name__ == '__main__':
     data = dataHandling.readDataFromCsvFile('data/test.csv')
     #print(__getDublicatedStudyIdsCoordinates(data))

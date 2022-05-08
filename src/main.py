@@ -10,7 +10,7 @@ while True:
     helper.showInfoText()
 
     if debug.isDebug:
-        data = dataHandling.readDataFromCsvFile('data/longtest.csv')
+        data = dataHandling.readDataFromCsvFile('data/test.csv')
 
     _input = input('What to do: ')
 
@@ -31,10 +31,13 @@ while True:
         if grade.hasAnyError(data):
             helper.printErrorLine()
         else:
-            pass
+            helper.generatePlots(data)
 
     elif _input == '4':
         if grade.hasAnyError(data):
             helper.printErrorLine()
         else:
             helper.showGradeListTable(data)
+    
+    else:
+        helper.printHeaderLine('Unknown command!\nTry again.', canGoBack=False)

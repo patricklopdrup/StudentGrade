@@ -82,4 +82,5 @@ def __orderByHelp() -> None:
 
 def generatePlots(data):
     plots.generateFinalGradePlot(data)
+    plots.generateGradesPerAssignmentPlot(data)
 
