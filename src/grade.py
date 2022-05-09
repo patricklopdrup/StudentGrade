@@ -89,6 +89,9 @@ def getIndicesForErrorRows(data: np.array) -> np.array:
 
 
 def __getDublicatedStudyIdsCoordinates(data: np.array) -> np.array:
+    '''
+    Checks if there are any duplicated study ids and returns the indices of these rows.
+    '''
     studyIds = dataHandling.getStudyIdsFromData(data)
     dublicatedStudyIdsIndices = np.empty((0,2), dtype=np.int)
     for i in range(len(studyIds)):
@@ -100,6 +103,9 @@ def __getDublicatedStudyIdsCoordinates(data: np.array) -> np.array:
     
 
 def __getNonPossibleGradesCoordinates(data:np.array) -> np.array:
+    '''
+    Checks if there are any grades that are not possible and returns the indices of these rows.
+    '''
     gradeMatrix = dataHandling.getGradeMatrixFromData(data)
     nonPossibleGradesIndices = np.empty((0,2), dtype=np.int)
     for i in range(gradeMatrix.shape[ROW]):
@@ -118,6 +124,9 @@ def __isPossibleGrade(grade) -> bool:
 
 
 def addFinalGradesToData(data: np.array) -> np.array:
+    '''
+    Add a column at the end of the data matrix with the final grades.
+    '''
     grades = dataHandling.getGradeMatrixFromData(data, asInt=True)
     finalGrades = computeFinalGrades(grades)
     finalGrades = np.concatenate((['Final Grade'], finalGrades), axis=0)
@@ -125,6 +134,10 @@ def addFinalGradesToData(data: np.array) -> np.array:
 
 
 def getFinalGradeDestribution(data: np.array) -> np.array:
+    '''
+    Get the distribution of final grades.
+    I.E. [1,0,0,0,2,0,5] if 1 got '-3', 2 got '10' and 5 got '12'.
+    '''
     grades = dataHandling.getGradeMatrixFromData(data, asInt=True)
     finalGrades = computeFinalGrades(grades)
     finalGradesDistribution = np.zeros(len(gradeScale), dtype=np.int)

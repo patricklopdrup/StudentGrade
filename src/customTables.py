@@ -1,4 +1,3 @@
-from cmath import asin
 from prettytable import PrettyTable
 from colorama import Fore, Style
 import numpy as np
@@ -12,9 +11,12 @@ COLUMN = 1
 
 
 def showCsvData(data: np.array) -> None:
+    '''
+    Show the data of the loaded csv file in a table.
+    '''
     rowsToColor = __getIndicesForEvenRows(data)
     table = getDefaultTable(data)
-    table = createTableRows(data, table, rowsToColor, Fore.CYAN)
+    table = addTableRows(data, table, rowsToColor, Fore.CYAN)
     print(f"\nTable with {dataHandling.getStudentCount(data)} students:")
     print(table)
 
@@ -24,6 +26,10 @@ def __getIndicesForEvenRows(data: np.array) -> np.array:
 
 
 def getDefaultTable(data:np.array) -> PrettyTable:
+    '''
+    Returns a table with the header of the csv file and
+    sets 'Name' and 'StudentID' to the left of the column.
+    '''
     table = PrettyTable(data.dtype.names)
     table.field_names = data[0]
     table.align['Name'] = 'l'
@@ -31,7 +37,11 @@ def getDefaultTable(data:np.array) -> PrettyTable:
     return table
 
 
-def createTableRows(data:np.array, table:PrettyTable, rowsToColor = [], color = Fore.CYAN) -> PrettyTable:
+def addTableRows(data:np.array, table:PrettyTable, rowsToColor = [], color = Fore.CYAN) -> PrettyTable:
+    '''
+    Adding rows to the table from the data.
+    Can also color the rows specified in 'rowsToColor'.
+    '''
     count = 0
     for row in data[1:]:
         if count in rowsToColor:
@@ -42,9 +52,17 @@ def createTableRows(data:np.array, table:PrettyTable, rowsToColor = [], color = 
     return table
 
 
+def __colorRow(row: np.array, color: Fore) -> np.array:
+    return np.array([color + str(cell) + Style.RESET_ALL for cell in row])
+
+
 def showErrorTable(data:np.array, errorCoordinates:np.array) -> None:
+    '''
+    Prints a table with errors shown in red.
+    @param errorCoordinates: np.array with the indices of the cells where an error occured.
+    '''
     table = getDefaultTable(data)
-    __createErrorTableRows(data, table, errorCoordinates)
+    table = __createErrorTableRows(data, table, errorCoordinates)
     if not grade.hasAnyError(data):
         print("\nNo errors in table.")
     else:
@@ -53,10 +71,14 @@ def showErrorTable(data:np.array, errorCoordinates:np.array) -> None:
 
 
 def __createErrorTableRows(data:np.array, table:PrettyTable, errorCoordinates = np.empty((0,2)), color = Fore.RED) -> PrettyTable:
+    '''
+    Creating rows in the table where error cells are shown in red.
+    '''
     count = 1 # header is row 0. So start at 1
     error_count = 0
     for row in data[1:]:
         if count in errorCoordinates[:,ROW]:
+            # find where the errors are in the row and add them in red to the table
             errorsInRow = __getAllErrorForRow(count, errorCoordinates)
             table.add_row(__colorCellInRow(row, color, errorsInRow))
             error_count += 1
@@ -65,17 +87,14 @@ def __createErrorTableRows(data:np.array, table:PrettyTable, errorCoordinates = 
         count += 1
     return table
 
+
 def __getAllErrorForRow(rowNumber: int, errorCoordinates: np.array) -> np.array:
     return errorCoordinates[errorCoordinates[:,ROW] == rowNumber][:,COLUMN]
 
 
-def __colorRow(row: np.array, color: Fore) -> np.array:
-    return np.array([color + str(cell) + Style.RESET_ALL for cell in row])
-
-
 def __colorCellInRow(row: np.array, color: Fore, cell_indices: np.array) -> np.array:
     '''
-    Color a single cell in a row.
+    Color cells in a row.
     '''
     newRow = np.array([], dtype=np.str)
     errorsInRow = __getErrorRowColored(row, color, cell_indices)
@@ -88,7 +107,11 @@ def __colorCellInRow(row: np.array, color: Fore, cell_indices: np.array) -> np.a
             newRow = np.append(newRow, cell)
     return newRow
     
+
 def __getErrorRowColored(row: np.array, color: Fore, cell_indices: np.array) -> np.array:
+    '''
+    Color single cells in a row.
+    '''
     errorsInRow = np.array([])
     for index in cell_indices:
         errorsInRow = np.append(errorsInRow, color + str(row[index]) + Style.RESET_ALL)
@@ -96,11 +119,15 @@ def __getErrorRowColored(row: np.array, color: Fore, cell_indices: np.array) -> 
 
 
 def showGradeListTable(data: np.array) -> None:
+    '''
+    Show a table with grades and final grade for all students sorted by name.
+    Every other row is colored.
+    '''
     dataSorted = __sortDataByName(data)
     dataSorted = grade.addFinalGradesToData(dataSorted)
     rowsToColor = __getIndicesForEvenRows(dataSorted)
     table = getDefaultTable(dataSorted)
-    table = createTableRows(dataSorted, table, rowsToColor)
+    table = addTableRows(dataSorted, table, rowsToColor)
     print(table)
 
 
@@ -109,6 +136,7 @@ def __sortDataByName(data: np.array) -> np.array:
     dataWithOutHeader = data[1:]
     sortedByName = dataWithOutHeader[dataWithOutHeader[:,columnIndexOfNames].argsort()]
     return np.insert(sortedByName, 0, data[0], axis=0)
+
 
 
 if __name__ == '__main__':

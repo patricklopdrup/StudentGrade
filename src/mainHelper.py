@@ -1,18 +1,17 @@
-from cProfile import label
 import dataHandling
 import os
 import numpy as np
 import grade
 import customTables as table
-import seaborn as sns
-import matplotlib.pyplot as plt
-import pandas as pd
 import customPlots as plots
 from colorama import Fore, Style
 
 LEN_OF_BOX = 65
 
 def printInBox(text:str) -> None:
+    '''
+    Print a text in the middle of a box.
+    '''
     textLines = text.split('\n')
     maxLen = max([len(line) for line in textLines])
     box = ''.join(['+'] + ['-'] * LEN_OF_BOX + ['+'])
@@ -24,6 +23,10 @@ def printInBox(text:str) -> None:
 
 
 def printHeaderLine(text:str, canGoBack = True, color = Fore.WHITE) -> None:
+    '''
+    Print in the middle of a box. Also write generic 'go back' message.
+    Can also color the text.
+    '''
     textLines = text.split('\n')
     if canGoBack:
         textLines.append('Press \'q\' to go back')
@@ -36,6 +39,7 @@ def printHeaderLine(text:str, canGoBack = True, color = Fore.WHITE) -> None:
 
 
 def printErrorLine(text:str = '') -> None:
+    '''Print generic error message if data is not loaded.'''
     if text == '':
         text = 'Error in data.\nPress \'2\' to check errors.'
     printHeaderLine(text, False, Fore.RED)
@@ -52,6 +56,10 @@ def isExit(input:str) -> bool:
 
 
 def isValidInput(input:str, isDataLoaded:bool) -> bool:
+    '''
+    If data is not loaded the program can not create plots or show final grades.
+    Here we check for that.
+    '''
     if isDataLoaded:
         return True
     else:
@@ -59,6 +67,9 @@ def isValidInput(input:str, isDataLoaded:bool) -> bool:
 
 
 def loadData() -> np.array:
+    '''
+    Loop where user can load data.
+    '''
     printHeaderLine("Load data from a CSV file")
     while True:
         fileName = input('Enter file name: ')
@@ -76,18 +87,27 @@ def loadData() -> np.array:
     
 
 def checkDataError(data:np.array):
+    '''
+    Shows the table with errors if any.
+    '''
     printHeaderLine("Check data error", False)
     errorRows = grade.getIndicesForErrorRows(data)
     table.showErrorTable(data, errorRows)
 
     
 def showGradeListTable(data:np.array):
-    orderedBy = "name"
-    printHeaderLine(f"Grade list ordered by {orderedBy}")
+    '''
+    Shows the table with final grades.
+    '''
+    printHeaderLine(f"Grade list ordered by name")
     table.showGradeListTable(data)
 
 
 def generatePlots(data):
+    '''
+    Generates each plot after each other.
+    '''
+    printHeaderLine("Generate plots", False)
     plots.generateFinalGradePlot(data)
     plots.generateGradesPerAssignmentPlot(data)
 

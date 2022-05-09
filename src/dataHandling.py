@@ -11,10 +11,12 @@ def readDataFromCsvFile(fileName: str) -> np.array:
     
 
 def getHeaderValueFromData(data:np.array):
+    '''Header is always the first row.'''
     return data[0]
 
 
 def getBodyValuesFromData(data:np.array):
+    '''Body is everything but the header.'''
     return data[1:]
 
 

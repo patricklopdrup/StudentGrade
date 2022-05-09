@@ -17,4 +17,8 @@ def generateLongCsv():
 
 
 if __name__ == '__main__':
-    generateLongCsv()
+    ###
+    # Uncomment the following line to generate a long csv file.
+    ###
+    #generateLongCsv()
+    print()

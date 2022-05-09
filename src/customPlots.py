@@ -1,13 +1,14 @@
-from hashlib import new
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 import grade
 import dataHandling
 import random
 
 
 def generateFinalGradePlot(data):
+    '''
+    Generates a bar plot of the distribution of final grades.
+    '''
     fig, ax = plt.subplots()
     # Data to use
     grades = grade.gradeScale.astype(str)
@@ -24,6 +25,10 @@ def generateFinalGradePlot(data):
 
 
 def generateGradesPerAssignmentPlot(data: np.array):
+    '''
+    Generates a scatter plot for each grade per assignment.
+    It also generates a line plot for the mean of each assignment.
+    '''
     grades = dataHandling.getGradesForAssignment(data, 0)
     assignmentCount = dataHandling.getAssignmentCount(data)
     fig, ax = plt.subplots()
@@ -46,6 +51,10 @@ def generateGradesPerAssignmentPlot(data: np.array):
 
 
 def getXValuesForPlot(data: np.array) -> np.array:
+    '''
+    Get the x values for the scatter plot for all assignments.
+    @return: np.array of floats.
+    '''
     xValues = np.array([], dtype=np.float)
     assignmentCount = dataHandling.getAssignmentCount(data)
     for i in range(assignmentCount):
@@ -54,14 +63,22 @@ def getXValuesForPlot(data: np.array) -> np.array:
     return xValues
 
 def getXIndices(grades: np.array, assignmentIndex: int) -> np.array:
+    '''
+    Get the x values with a little offset for a single assignment.
+    @return: np.array of floats.
+    '''
     assignmentIndex += 1
-    xIndices = np.array([], dtype=np.int)
+    xIndices = np.array([], dtype=np.float)
     for _ in range(grades.size):
         xIndices = np.append(xIndices, assignmentIndex + getRandomOffset(0.1))
     return xIndices
 
 
 def getYValuesForPlot(data: np.array) -> np.array:
+    '''
+    Get the y values for the scatter plot for all assignments.
+    @return: np.array of floats.
+    '''
     yValues = np.array([], dtype=np.float)
     assignmentCount = dataHandling.getAssignmentCount(data)
     for i in range(assignmentCount):
@@ -70,22 +87,31 @@ def getYValuesForPlot(data: np.array) -> np.array:
     return yValues
 
 def getYIndices(grades: np.array) -> np.array:
+    '''
+    Get the y values with a little offset for a single assignment.
+    @return: np.array of floats.
+    '''
     newGrades = np.array([], dtype=np.float)
     for g in np.nditer(grades):
         newGrades = np.append(newGrades, g + getRandomOffset(0.3))
     return newGrades
 
 
+def getRandomOffset(offset:float) -> float:
+    return random.uniform(-offset, offset)
+
+
 def getMeanValuesForPlot(data: np.array) -> np.array:
+    '''
+    Get the mean values for the line plot for all assignments.
+    @return: np.array of floats.
+    '''
     meanValues = np.array([], dtype=np.float)
     assignmentCount = dataHandling.getAssignmentCount(data)
     for i in range(assignmentCount):
         meanValues = np.append(meanValues, grade.getMeanValueForAssignment(data, i))
     return meanValues
 
-
-def getRandomOffset(offset:float) -> float:
-    return random.uniform(-offset, offset)
 
 
 if __name__ == '__main__':

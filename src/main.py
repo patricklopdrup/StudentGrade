@@ -1,4 +1,3 @@
-import numpy as np
 import grade
 import dataHandling
 import mainHelper as helper
@@ -48,4 +47,4 @@ while True:
             helper.showGradeListTable(data)
     
     else:
-        helper.printHeaderLine('Unknown command!\nTry again.', canGoBack=False)
+        helper.printErrorLine('Unknown command!\nTry again.')
